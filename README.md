@@ -10,23 +10,32 @@ This Python script automates the process of checking for and updating the OpenWe
 - **Configuration File**: Stores the installation directory and the current version in a configuration file to keep track of updates.
 
 ## Requirements
-- Python 3.6 or higher
+- Python 3.8 or higher
 - `requests` library
 - `dulwich` library (for GitHub interaction)
 
-You can install the required libraries using `pip`:
-```bash
-pip install requests dulwich
-```
 
+
+
+
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/BrainDriveAI/InstallerAutoUpdater.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd InstallerAutoUpdater
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 ## Usage
-
-1. Clone the repository or download the script.
-2. Make sure Python 3.6+ is installed on your system.
-3. Run the script using the command below:
    ```bash
    python InstallerAutoUpdater.py
    ```
+
 
 ### How It Works
 1. **Configuration File**: When first run, the script will create a `config.json` file to store the installation directory and version.
