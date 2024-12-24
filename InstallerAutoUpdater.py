@@ -6,7 +6,17 @@ import subprocess
 import requests
 from datetime import datetime
 from dulwich import porcelain
+import atexit
 
+if hasattr(sys, '_MEIPASS'):
+    temp_dir = sys._MEIPASS
+
+    @atexit.register
+    def cleanup_temp_dir():
+        try:
+            shutil.rmtree(temp_dir, ignore_errors=True)
+        except Exception as e:
+            print(f"Failed to clean up temporary directory {temp_dir}: {e}")
 
 class InstallerAutoUpdater:
     def __init__(self):
@@ -121,7 +131,14 @@ class InstallerAutoUpdater:
         except Exception as e:
             print(f"An unexpected error occurred while trying to run the executable: {e}")
         finally:
+            # Ensure cleanup happens here
+            if hasattr(sys, '_MEIPASS'):
+                try:
+                    shutil.rmtree(sys._MEIPASS, ignore_errors=True)
+                except Exception as cleanup_err:
+                    print(f"Failed to remove temporary directory: {cleanup_err}")
             sys.exit()
+
 
     def verify_install(self):
         """Verify the install directory and executable."""
