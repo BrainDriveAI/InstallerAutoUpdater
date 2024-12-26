@@ -7,16 +7,21 @@ import requests
 from datetime import datetime
 from dulwich import porcelain
 import atexit
+import time
 
 if hasattr(sys, '_MEIPASS'):
     temp_dir = sys._MEIPASS
 
     @atexit.register
     def cleanup_temp_dir():
-        try:
-            shutil.rmtree(temp_dir, ignore_errors=True)
-        except Exception as e:
-            print(f"Failed to clean up temporary directory {temp_dir}: {e}")
+        for _ in range(5):  # Retry cleanup up to 5 times
+            try:
+                shutil.rmtree(temp_dir, ignore_errors=True)
+                print(f"Successfully cleaned up temporary directory: {temp_dir}")
+                break
+            except Exception as e:
+                print(f"Failed to clean up temporary directory {temp_dir}: {e}")
+                time.sleep(1)  # Wait before retrying
 
 class InstallerAutoUpdater:
     def __init__(self):
@@ -128,6 +133,8 @@ class InstallerAutoUpdater:
             print(f"Error: Unable to find the executable '{exe_path}'.")
         except PermissionError:
             print(f"Error: Permission denied while trying to run '{exe_path}'. Ensure you have the necessary permissions.")
+        except subprocess.CalledProcessError as e:
+            print(f"Executable returned an error: {e}")            
         except Exception as e:
             print(f"An unexpected error occurred while trying to run the executable: {e}")
         finally:
